@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and subscription data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "subscriptionStatus": { "type": "string", "enum": ["active", "inactive", "trialing"] },
+        "stripeCustomerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "subscriptionStatus"]
+    },
+    "Case": {
+      "title": "Case",
+      "description": "A legal case containing evidence and analysis",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "client": { "type": "string" },
+        "incidentDate": { "type": "string" },
+        "status": { "type": "string", "enum": ["analyzing", "completed", "pending"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "name", "status"]
+    },
+    "Evidence": {
+      "title": "Evidence",
+      "description": "Evidence items linked to a case",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "caseId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["video", "audio", "pdf", "image"] },
+        "status": { "type": "string", "enum": ["indexed", "flagged", "unprocessed"] },
+        "transcript": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "caseId", "name", "type", "status"]
+    },
+    "Finding": {
+      "title": "Finding",
+      "description": "Constitutional or legal findings extracted from evidence",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "caseId": { "type": "string" },
+        "evidenceId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "issue": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "caseId", "title", "description", "issue", "severity"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "RAG chat history for a case",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "caseId": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "content": { "type": "string" },
+        "sources": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "caseId", "role", "content"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user profiles"
+    },
+    "/cases/{caseId}": {
+      "schema": "Case",
+      "description": "Root cases collection"
+    },
+    "/cases/{caseId}/evidence/{evidenceId}": {
+      "schema": "Evidence",
+      "description": "Evidence for a specific case"
+    },
+    "/cases/{caseId}/findings/{findingId}": {
+      "schema": "Finding",
+      "description": "Analysis findings for a case"
+    },
+    "/cases/{caseId}/chat/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Contextual AI chat history"
+    }
+  }
+}

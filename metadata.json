@@ -1,0 +1,6 @@
+{
+  "name": "JurisLens",
+  "description": "Professional legal-tech platform for police encounter analysis, bodycam forensic review, and constitutional issue spotting.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
